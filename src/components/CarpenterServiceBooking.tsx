@@ -32,9 +32,9 @@ export const CarpenterServiceBooking: React.FC<CarpenterServiceBookingProps> = (
   const [scheduledDate, setScheduledDate] = useState<string>('2026-08-25');
   const [scheduledTimeSlot, setScheduledTimeSlot] = useState<string>('10:00 AM - 01:00 PM');
   const [address, setAddress] = useState<string>(
-    currentUser.address || '742 Evergreen Terrace, Springfield, OR'
+    currentUser.address || '42 Indiranagar, 100ft Road, Bengaluru'
   );
-  const [landmark, setLandmark] = useState<string>('Near Central Oak Park');
+  const [landmark, setLandmark] = useState<string>('Near Metro Pillar 120');
   const [problemDescription, setProblemDescription] = useState<string>(
     'Dining chair backrest tenon joint loose and wooden wardrobe drawer sliding rail stuck.'
   );
@@ -61,9 +61,9 @@ export const CarpenterServiceBooking: React.FC<CarpenterServiceBookingProps> = (
         photos: photoUrl ? [photoUrl] : [],
         address: {
           street: address,
-          city: 'Springfield',
-          state: 'OR',
-          postalCode: '97477',
+          city: 'Bengaluru',
+          state: 'KA',
+          postalCode: '560038',
           landmark,
         },
         preferredDate: scheduledDate,
@@ -129,7 +129,7 @@ export const CarpenterServiceBooking: React.FC<CarpenterServiceBookingProps> = (
             </div>
             <div className="flex justify-between">
               <span className="text-[#8c7e75]">Estimated Minimum:</span>
-              <span className="font-bold text-[#15803d]">${confirmedBooking.estimatedCost}</span>
+              <span className="font-bold text-[#15803d]">₹{(confirmedBooking.estimatedCost ?? 0).toLocaleString('en-IN')}</span>
             </div>
           </div>
 
@@ -162,7 +162,7 @@ export const CarpenterServiceBooking: React.FC<CarpenterServiceBookingProps> = (
                   <div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-[#78350f] bg-[#fef3c7] px-2 py-0.5 rounded-md">
-                        From ${srv.startingPrice}
+                        From ₹{srv.startingPrice.toLocaleString('en-IN')}
                       </span>
                     </div>
 
@@ -229,7 +229,7 @@ export const CarpenterServiceBooking: React.FC<CarpenterServiceBookingProps> = (
                   <p className="text-xs font-bold text-[#78350f]">{currentServiceMeta.name}</p>
                 </div>
                 <span className="text-base font-bold text-[#291e14]">
-                  ${currentServiceMeta.startingPrice} <span className="text-[10px] font-normal text-[#8c7e75]">est.</span>
+                  ₹{currentServiceMeta.startingPrice.toLocaleString('en-IN')} <span className="text-[10px] font-normal text-[#8c7e75]">est.</span>
                 </span>
               </div>
 

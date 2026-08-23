@@ -14,6 +14,7 @@ import {
   AlertTriangle,
   Send,
   DollarSign,
+  IndianRupee,
   TrendingUp,
   Clock,
   Sparkles,
@@ -70,10 +71,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   // Quote itemization form
   const [activeQuoteId, setActiveQuoteId] = useState<string | null>(null);
-  const [quoteMaterialCost, setQuoteMaterialCost] = useState(620);
-  const [quoteLaborCost, setQuoteLaborCost] = useState(480);
-  const [quoteFinishCost, setQuoteFinishCost] = useState(110);
-  const [quoteDeliveryCost, setQuoteDeliveryCost] = useState(70);
+  const [quoteMaterialCost, setQuoteMaterialCost] = useState(24000);
+  const [quoteLaborCost, setQuoteLaborCost] = useState(16500);
+  const [quoteFinishCost, setQuoteFinishCost] = useState(4800);
+  const [quoteDeliveryCost, setQuoteDeliveryCost] = useState(2200);
   const [quoteDays, setQuoteDays] = useState(14);
   const [quoteNotes, setQuoteNotes] = useState('Burma Teak Grade-A with traditional mortise tenon joints.');
 
@@ -135,8 +136,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   const handleSubmitFormalQuotation = async (quoteId: string) => {
-    const sub = quoteMaterialCost + quoteLaborCost + quoteFinishCost + quoteDeliveryCost + 50;
-    const tax = Math.round(sub * 0.08);
+    const sub = quoteMaterialCost + quoteLaborCost + quoteFinishCost + quoteDeliveryCost + 1500;
+    const tax = Math.round(sub * 0.12);
     const grandTotal = sub + tax;
     try {
       await api.submitAdminQuotation(quoteId, {
@@ -145,7 +146,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         laborCost: quoteLaborCost,
         finishCost: quoteFinishCost,
         deliveryCost: quoteDeliveryCost,
-        customizationFee: 50,
+        customizationFee: 1500,
         subtotal: sub,
         taxAmount: tax,
         discountAmount: 0,
@@ -155,7 +156,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         sentAt: new Date().toISOString(),
         materialsBreakdown: [
           { item: 'Kiln-Dried Timber Lumber', qty: '38 bd. ft', cost: quoteMaterialCost },
-          { item: 'Fasteners & Joinery Glue', qty: '1 set', cost: 50 },
+          { item: 'Fasteners & Joinery Glue', qty: '1 set', cost: 1500 },
           { item: 'Multi-Coat PU Finish', qty: '1 L', cost: quoteFinishCost },
         ],
       });
@@ -247,9 +248,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <div className="bg-white p-5 rounded-2xl border border-[#e7dfd5] shadow-xs">
               <div className="flex items-center justify-between text-[#8c7e75]">
                 <span className="text-xs font-semibold">Total Revenue (YTD)</span>
-                <DollarSign className="w-4 h-4 text-[#15803d]" />
+                <IndianRupee className="w-4 h-4 text-[#15803d]" />
               </div>
-              <p className="text-2xl font-bold text-[#291e14] mt-2">${totalSales.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-[#291e14] mt-2">₹{totalSales.toLocaleString('en-IN')}</p>
               <span className="text-[11px] text-[#15803d] font-semibold flex items-center gap-1 mt-1">
                 <ArrowUpRight className="w-3 h-3" /> +18.4% from last month
               </span>
@@ -300,16 +301,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </h3>
               <div className="h-48 flex items-end gap-4 pt-8 px-2 border-b border-[#f0eae1]">
                 {[
-                  { month: 'Jan', val: 3200, height: '40%' },
-                  { month: 'Feb', val: 4100, height: '52%' },
-                  { month: 'Mar', val: 4800, height: '62%' },
-                  { month: 'Apr', val: 5600, height: '70%' },
-                  { month: 'May', val: 6200, height: '78%' },
-                  { month: 'Jun', val: 7400, height: '92%' },
-                  { month: 'Jul', val: 8100, height: '100%' },
+                  { month: 'Jan', val: '₹2.8L', height: '40%' },
+                  { month: 'Feb', val: '₹3.4L', height: '52%' },
+                  { month: 'Mar', val: '₹4.1L', height: '62%' },
+                  { month: 'Apr', val: '₹4.9L', height: '70%' },
+                  { month: 'May', val: '₹5.5L', height: '78%' },
+                  { month: 'Jun', val: '₹6.8L', height: '92%' },
+                  { month: 'Jul', val: '₹7.5L', height: '100%' },
                 ].map((bar) => (
                   <div key={bar.month} className="flex-1 flex flex-col items-center gap-2">
-                    <span className="text-[10px] font-bold text-[#78350f]">${bar.val}</span>
+                    <span className="text-[10px] font-bold text-[#78350f]">{bar.val}</span>
                     <div
                       className="w-full bg-[#78350f] rounded-t-lg hover:bg-[#5c280a] transition-all cursor-pointer"
                       style={{ height: bar.height }}
@@ -334,7 +335,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         <span className="text-[10px] text-[#8c7e75]">{p.category}</span>
                       </div>
                     </div>
-                    <span className="font-bold text-[#291e14]">${p.price}</span>
+                    <span className="font-bold text-[#291e14]">₹{p.price?.toLocaleString('en-IN')}</span>
                   </div>
                 ))}
               </div>
@@ -421,10 +422,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </td>
                         <td className="p-4">
                           <div className="flex flex-col">
-                            <span className="font-bold text-sm text-[#291e14]">${p.price?.toLocaleString()}</span>
+                            <span className="font-bold text-sm text-[#291e14]">₹{p.price?.toLocaleString('en-IN')}</span>
                             {p.originalPrice != null && p.originalPrice > p.price && (
                               <span className="text-[10px] text-[#9ca3af] line-through">
-                                ${p.originalPrice?.toLocaleString()}
+                                ₹{p.originalPrice?.toLocaleString('en-IN')}
                               </span>
                             )}
                           </div>
@@ -685,7 +686,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                           <div>
-                            <label className="font-semibold block mb-1 text-[#291e14]">Lumber Cost ($):</label>
+                            <label className="font-semibold block mb-1 text-[#291e14]">Lumber Cost (₹):</label>
                             <input
                               type="number"
                               value={quoteMaterialCost}
@@ -694,7 +695,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             />
                           </div>
                           <div>
-                            <label className="font-semibold block mb-1 text-[#291e14]">Master Labor ($):</label>
+                            <label className="font-semibold block mb-1 text-[#291e14]">Master Labor (₹):</label>
                             <input
                               type="number"
                               value={quoteLaborCost}
@@ -703,7 +704,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             />
                           </div>
                           <div>
-                            <label className="font-semibold block mb-1 text-[#291e14]">PU Finish ($):</label>
+                            <label className="font-semibold block mb-1 text-[#291e14]">PU Finish (₹):</label>
                             <input
                               type="number"
                               value={quoteFinishCost}
@@ -712,7 +713,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             />
                           </div>
                           <div>
-                            <label className="font-semibold block mb-1 text-[#291e14]">Delivery ($):</label>
+                            <label className="font-semibold block mb-1 text-[#291e14]">Delivery (₹):</label>
                             <input
                               type="number"
                               value={quoteDeliveryCost}
@@ -724,7 +725,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                         <div className="flex justify-between items-center pt-2">
                           <span className="text-sm font-bold text-[#92400e]">
-                            Total Formal Quote: ${quoteMaterialCost + quoteLaborCost + quoteFinishCost + quoteDeliveryCost}
+                            Total Formal Quote: ₹{(quoteMaterialCost + quoteLaborCost + quoteFinishCost + quoteDeliveryCost).toLocaleString('en-IN')}
                           </span>
                           <div className="flex gap-2">
                             <button
@@ -837,7 +838,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </span>
                     </td>
                     <td className="p-4">{item.minThreshold} {item.unit}</td>
-                    <td className="p-4 font-bold">${item.costPerUnit}/{item.unit}</td>
+                    <td className="p-4 font-bold">₹{item.costPerUnit.toLocaleString('en-IN')}/{item.unit}</td>
                     <td className="p-4 text-right">
                       <div className="inline-flex items-center gap-1">
                         <button

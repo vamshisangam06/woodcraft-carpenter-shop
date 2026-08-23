@@ -143,16 +143,16 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               {/* Price */}
               <div className="flex items-baseline gap-3 mt-3">
                 <span className="text-3xl font-bold text-[#291e14]">
-                  ${(product.price ?? 0).toLocaleString()}
+                  ₹{(product.price ?? 0).toLocaleString('en-IN')}
                 </span>
                 {product.originalPrice != null && product.originalPrice > product.price && (
                   <span className="text-base text-[#9ca3af] line-through">
-                    ${product.originalPrice.toLocaleString()}
+                    ₹{product.originalPrice.toLocaleString('en-IN')}
                   </span>
                 )}
                 {product.originalPrice != null && product.originalPrice > product.price && (
                   <span className="text-xs font-semibold text-[#15803d] bg-[#dcfce7] px-2 py-0.5 rounded-md">
-                    Save ${(product.originalPrice - product.price).toLocaleString()}
+                    Save ₹{(product.originalPrice - product.price).toLocaleString('en-IN')}
                   </span>
                 )}
               </div>

@@ -120,7 +120,7 @@ export const CustomFurnitureBuilder: React.FC<CustomFurnitureBuilderProps> = ({
   const [selectedFinish, setSelectedFinish] = useState<FinishType>('Natural Matte Oil');
   const [designStyle, setDesignStyle] = useState<string>('Modern Scandinavian with tapered legs');
   const [notes, setNotes] = useState<string>('');
-  const [budgetRange, setBudgetRange] = useState<string>('$800 - $1,400');
+  const [budgetRange, setBudgetRange] = useState<string>('₹35,000 - ₹55,000');
   const [preferredDate, setPreferredDate] = useState<string>('2026-09-15');
   const [referenceImage, setReferenceImage] = useState<string>(
     prefillProduct?.images?.[0] || 'https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=800&auto=format&fit=crop&q=80'
@@ -173,7 +173,7 @@ export const CustomFurnitureBuilder: React.FC<CustomFurnitureBuilderProps> = ({
         finishType: selectedFinish,
         designStyle,
         referenceImageUrl: referenceImage,
-        notes: `${notes}. (Estimated price guide: $${aiEstimate?.estimatedTotal || 1100})`,
+        notes: `${notes}. (Estimated price guide: ₹${aiEstimate?.estimatedTotal || 45000})`,
         budgetRange,
         preferredDeliveryDate: preferredDate,
       });
@@ -236,7 +236,7 @@ export const CustomFurnitureBuilder: React.FC<CustomFurnitureBuilderProps> = ({
             </div>
             <div className="flex justify-between">
               <span className="text-[#8c7e75]">Estimated Range:</span>
-              <span className="font-semibold text-[#92400e]">${aiEstimate?.estimatedTotal ? (aiEstimate.estimatedTotal - 100) + ' - $' + (aiEstimate.estimatedTotal + 150) : '$1,100 - $1,400'}</span>
+              <span className="font-semibold text-[#92400e]">₹{aiEstimate?.estimatedTotal ? ((aiEstimate.estimatedTotal - 3000).toLocaleString('en-IN') + ' - ₹' + (aiEstimate.estimatedTotal + 5000).toLocaleString('en-IN')) : '42,000 - ₹52,000'}</span>
             </div>
           </div>
 
@@ -540,7 +540,7 @@ export const CustomFurnitureBuilder: React.FC<CustomFurnitureBuilderProps> = ({
                     type="text"
                     value={budgetRange}
                     onChange={(e) => setBudgetRange(e.target.value)}
-                    placeholder="e.g. $900 - $1,500"
+                    placeholder="e.g. ₹35,000 - ₹55,000"
                     className="w-full p-2.5 bg-[#fdfbf7] border border-[#dfd4c5] rounded-xl text-xs text-[#291e14] focus:outline-hidden focus:border-[#78350f]"
                   />
                 </div>
@@ -598,7 +598,7 @@ export const CustomFurnitureBuilder: React.FC<CustomFurnitureBuilderProps> = ({
               <div className="bg-[#fdfbf7] p-5 rounded-2xl border border-[#f0eae1] text-center">
                 <span className="text-xs text-[#8c7e75] font-medium">Estimated Build Range</span>
                 <div className="text-3xl font-serif font-bold text-[#92400e] mt-1">
-                  ${aiEstimate?.estimatedTotal ? (aiEstimate.estimatedTotal - 70).toLocaleString() + ' - $' + (aiEstimate.estimatedTotal + 120).toLocaleString() : '$1,150 - $1,450'}
+                  ₹{aiEstimate?.estimatedTotal ? ((aiEstimate.estimatedTotal - 2500).toLocaleString('en-IN') + ' - ₹' + (aiEstimate.estimatedTotal + 4500).toLocaleString('en-IN')) : '42,000 - ₹52,000'}
                 </div>
                 <p className="text-[11px] text-[#6e5d52] mt-1">
                   Includes raw {selectedWood} lumber, master labor, 3-coat {selectedFinish}, and delivery.
@@ -614,28 +614,28 @@ export const CustomFurnitureBuilder: React.FC<CustomFurnitureBuilderProps> = ({
                 <div className="flex justify-between text-[#57483f]">
                   <span>{selectedWood} Timber ({aiEstimate?.boardFeet || 35} bd. ft):</span>
                   <span className="font-bold text-[#291e14]">
-                    ${aiEstimate?.materialCost ? aiEstimate.materialCost : '580'}
+                    ₹{aiEstimate?.materialCost ? aiEstimate.materialCost.toLocaleString('en-IN') : '22,000'}
                   </span>
                 </div>
 
                 <div className="flex justify-between text-[#57483f]">
                   <span>Master Joinery & Mortise Labor:</span>
                   <span className="font-bold text-[#291e14]">
-                    ${aiEstimate?.laborCost ? aiEstimate.laborCost : '420'}
+                    ₹{aiEstimate?.laborCost ? aiEstimate.laborCost.toLocaleString('en-IN') : '16,500'}
                   </span>
                 </div>
 
                 <div className="flex justify-between text-[#57483f]">
                   <span>Finish Application ({selectedFinish}):</span>
                   <span className="font-bold text-[#291e14]">
-                    ${aiEstimate?.finishCost ? aiEstimate.finishCost : '95'}
+                    ₹{aiEstimate?.finishCost ? aiEstimate.finishCost.toLocaleString('en-IN') : '4,800'}
                   </span>
                 </div>
 
                 <div className="flex justify-between text-[#57483f]">
                   <span>White-Glove Delivery & Positioning:</span>
                   <span className="font-bold text-[#291e14]">
-                    ${aiEstimate?.deliveryCost ? aiEstimate.deliveryCost : '60'}
+                    ₹{aiEstimate?.deliveryCost ? aiEstimate.deliveryCost.toLocaleString('en-IN') : '2,200'}
                   </span>
                 </div>
               </div>

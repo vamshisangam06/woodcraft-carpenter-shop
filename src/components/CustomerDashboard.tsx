@@ -197,7 +197,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
                   </div>
 
                   <p className="text-xs text-[#8c7e75]">
-                    Placed on {new Date(order.createdAt).toLocaleDateString()} • {order.items.length} items • ${(order.grandTotal ?? (order as any).totalAmount ?? 0).toLocaleString()} ({order.paymentMethod.toUpperCase()})
+                    Placed on {new Date(order.createdAt).toLocaleDateString()} • {order.items.length} items • ₹{(order.grandTotal ?? (order as any).totalAmount ?? 0).toLocaleString('en-IN')} ({order.paymentMethod.toUpperCase()})
                   </p>
 
                   <div className="flex items-center gap-2 pt-1">
@@ -275,7 +275,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
                     <div className="text-right">
                       <span className="text-xs text-[#8c7e75]">Official Workshop Quote:</span>
                       <p className="text-xl font-bold text-[#92400e]">
-                        ${q.quotation.grandTotal.toLocaleString()}
+                        ₹{q.quotation.grandTotal.toLocaleString('en-IN')}
                       </p>
                     </div>
                   )}
@@ -308,19 +308,19 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[#57483f]">
                       <div>
                         <span className="text-[#8c7e75] block">Timber Lumber:</span>
-                        <strong className="text-[#291e14]">${q.quotation.materialCost}</strong>
+                        <strong className="text-[#291e14]">₹{q.quotation.materialCost.toLocaleString('en-IN')}</strong>
                       </div>
                       <div>
                         <span className="text-[#8c7e75] block">Joinery Labor:</span>
-                        <strong className="text-[#291e14]">${q.quotation.laborCost}</strong>
+                        <strong className="text-[#291e14]">₹{q.quotation.laborCost.toLocaleString('en-IN')}</strong>
                       </div>
                       <div>
                         <span className="text-[#8c7e75] block">PU Finish & Sealer:</span>
-                        <strong className="text-[#291e14]">${q.quotation.finishCost}</strong>
+                        <strong className="text-[#291e14]">₹{q.quotation.finishCost.toLocaleString('en-IN')}</strong>
                       </div>
                       <div>
                         <span className="text-[#8c7e75] block">Delivery & Install:</span>
-                        <strong className="text-[#291e14]">${q.quotation.deliveryCost}</strong>
+                        <strong className="text-[#291e14]">₹{q.quotation.deliveryCost.toLocaleString('en-IN')}</strong>
                       </div>
                     </div>
 
@@ -402,7 +402,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
 
                 <div className="text-right shrink-0">
                   <span className="text-xs text-[#8c7e75]">Estimated Cost:</span>
-                  <p className="text-base font-bold text-[#291e14]">${((b.finalCost || b.estimatedCost) ?? 0).toLocaleString()}</p>
+                  <p className="text-base font-bold text-[#291e14]">₹{((b.finalCost || b.estimatedCost) ?? 0).toLocaleString('en-IN')}</p>
                 </div>
               </div>
             ))
@@ -415,11 +415,11 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {((currentUser as any).addresses || [
             {
-              street: currentUser.address || '742 Evergreen Terrace',
-              city: 'Springfield',
-              state: 'OR',
-              zipCode: '97477',
-              country: 'United States',
+              street: currentUser.address || '42 Indiranagar, 100ft Road',
+              city: 'Bengaluru',
+              state: 'Karnataka',
+              zipCode: '560038',
+              country: 'India',
               isDefault: true,
             },
           ]).map((addr: any, idx: number) => (

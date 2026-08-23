@@ -34,13 +34,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   couponCode,
   onOrderCompleted,
 }) => {
-  const [fullName, setFullName] = useState(currentUser.name || 'John Doe');
-  const [email, setEmail] = useState(currentUser.email || 'john@example.com');
-  const [phone, setPhone] = useState(currentUser.phone || '+1 555-432-8899');
-  const [street, setStreet] = useState(currentUser.address || '742 Evergreen Terrace');
-  const [city, setCity] = useState('Springfield');
-  const [state, setState] = useState('Oregon');
-  const [postalCode, setPostalCode] = useState('97477');
+  const [fullName, setFullName] = useState(currentUser.name || 'Aarav Sharma');
+  const [email, setEmail] = useState(currentUser.email || 'aarav.sharma@example.com');
+  const [phone, setPhone] = useState(currentUser.phone || '+91 98765 43210');
+  const [street, setStreet] = useState(currentUser.address || '42 Indiranagar, 100ft Road');
+  const [city, setCity] = useState('Bengaluru');
+  const [state, setState] = useState('Karnataka');
+  const [postalCode, setPostalCode] = useState('560038');
   const [orderNotes, setOrderNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'upi' | 'card' | 'netbanking'>('upi');
 
@@ -55,8 +55,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   if (!isOpen) return null;
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const deliveryFee = subtotal > 1000 || subtotal === 0 ? 0 : 75;
-  const tax = Math.round(subtotal * 0.08);
+  const deliveryFee = subtotal > 35000 || subtotal === 0 ? 0 : 1500;
+  const tax = Math.round(subtotal * 0.12);
   const grandTotal = Math.max(0, subtotal + deliveryFee + tax - appliedDiscount);
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
@@ -155,7 +155,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               </div>
               <div className="flex justify-between">
                 <span className="text-[#8c7e75]">Total Paid:</span>
-                <span className="font-bold text-base text-[#291e14]">${(completedOrder.grandTotal ?? 0).toLocaleString()}</span>
+                <span className="font-bold text-base text-[#291e14]">₹{(completedOrder.grandTotal ?? 0).toLocaleString('en-IN')}</span>
               </div>
             </div>
 
@@ -240,7 +240,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="font-bold text-[#291e14] block mb-1">Zip Code:</label>
+                  <label className="font-bold text-[#291e14] block mb-1">Pin Code:</label>
                   <input
                     type="text"
                     required
@@ -265,9 +265,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
-                  { id: 'upi', label: 'UPI / QR Code', icon: QrCode, desc: 'Google Pay, PhonePe' },
-                  { id: 'card', label: 'Credit/Debit Card', icon: CreditCard, desc: 'Visa, Mastercard' },
-                  { id: 'netbanking', label: 'Net Banking', icon: Building, desc: 'Direct wire transfer' },
+                  { id: 'upi', label: 'UPI / QR Code', icon: QrCode, desc: 'Google Pay, PhonePe, Paytm' },
+                  { id: 'card', label: 'Credit/Debit Card', icon: CreditCard, desc: 'Visa, Mastercard, RuPay' },
+                  { id: 'netbanking', label: 'Net Banking', icon: Building, desc: 'All Indian Banks' },
                   { id: 'cod', label: 'Cash on Delivery', icon: DollarSign, desc: 'Pay at installation' },
                 ].map((pm) => {
                   const Icon = pm.icon;
@@ -333,7 +333,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     <code className="text-xs font-bold text-[#291e14] bg-white px-2 py-1 rounded-md mt-1 inline-block">
                       woodcraft.carpentry@upi
                     </code>
-                    <p className="text-[10px] text-[#8c7e75] mt-1">Instant digital payment verification.</p>
+                    <p className="text-[10px] text-[#8c7e75] mt-1">Instant digital payment verification via BHIM / UPI.</p>
                   </div>
                 </div>
               )}
@@ -342,9 +342,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             {/* Step 3: Order Summary & Place Order */}
             <div className="pt-4 border-t border-[#f0eae1] flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-xs space-y-0.5">
-                <span className="text-[#8c7e75]">Total ({items.length} items + Tax):</span>
+                <span className="text-[#8c7e75]">Total ({items.length} items + GST):</span>
                 <p className="text-2xl font-serif font-bold text-[#92400e]">
-                  ${grandTotal.toLocaleString()}
+                  ₹{grandTotal.toLocaleString('en-IN')}
                 </p>
               </div>
 

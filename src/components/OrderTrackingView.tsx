@@ -236,7 +236,7 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({
                       </div>
                     </div>
                     <span className="text-xs font-bold text-[#291e14]">
-                      ${(((item.price ?? (item as any).unitPrice ?? 0)) * (item.quantity ?? 1)).toLocaleString()}
+                      ₹{(((item.price ?? (item as any).unitPrice ?? 0)) * (item.quantity ?? 1)).toLocaleString('en-IN')}
                     </span>
                   </div>
                 ))}
@@ -273,7 +273,7 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({
                     </p>
                     <p className="text-[11px] text-[#8c7e75] mt-0.5 flex items-center gap-1">
                       <Phone className="w-3 h-3 text-[#b45309]" />
-                      <span>{(activeOrder as any).assignedCarpenter?.phone || '+1 (555) 349-8821'}</span>
+                      <span>{(activeOrder as any).assignedCarpenter?.phone || '+91 98450 22189'}</span>
                     </p>
                   </div>
                 </div>
@@ -309,7 +309,7 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({
 
               <div className="flex justify-between font-bold text-sm text-[#291e14] pt-1">
                 <span>Grand Total:</span>
-                <span className="text-[#92400e]">${(activeOrder.grandTotal ?? (activeOrder as any).totalAmount ?? 0).toLocaleString()}</span>
+                <span className="text-[#92400e]">₹{(activeOrder.grandTotal ?? (activeOrder as any).totalAmount ?? 0).toLocaleString('en-IN')}</span>
               </div>
             </div>
           </div>

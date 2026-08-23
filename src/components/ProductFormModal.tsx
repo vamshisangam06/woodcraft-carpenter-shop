@@ -12,6 +12,7 @@ import {
   Loader2,
   TreePine,
   DollarSign,
+  IndianRupee,
   Package,
   Layers,
   Ruler,
@@ -92,8 +93,8 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
   const [category, setCategory] = useState<ProductCategory>('Dining Tables');
   const [woodType, setWoodType] = useState<string>('Burma Teak');
   const [customWood, setCustomWood] = useState('');
-  const [price, setPrice] = useState<number>(850);
-  const [originalPrice, setOriginalPrice] = useState<number>(1050);
+  const [price, setPrice] = useState<number>(38000);
+  const [originalPrice, setOriginalPrice] = useState<number>(48000);
   const [stockCount, setStockCount] = useState<number>(5);
   const [inStock, setInStock] = useState<boolean>(true);
   const [deliveryDays, setDeliveryDays] = useState<number>(10);
@@ -992,17 +993,17 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
           {/* 4. Pricing, Stock & Dimensions */}
           <div className="space-y-4 pt-2 border-t border-[#f0eae1]">
             <div className="flex items-center gap-2 text-xs font-bold text-[#78350f] uppercase tracking-wider">
-              <DollarSign className="w-4 h-4" />
+              <IndianRupee className="w-4 h-4" />
               <span>4. Pricing, Stock & Physical Dimensions</span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div>
                 <label className="text-xs font-bold text-[#291e14] block mb-1">
-                  Sale Price ($) <span className="text-[#dc2626]">*</span>
+                  Sale Price (₹) <span className="text-[#dc2626]">*</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-xs text-[#8c7e75] font-bold">$</span>
+                  <span className="absolute left-3 top-2.5 text-xs text-[#8c7e75] font-bold">₹</span>
                   <input
                     type="number"
                     required
@@ -1016,10 +1017,10 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
 
               <div>
                 <label className="text-xs font-bold text-[#291e14] block mb-1">
-                  Original / MSRP ($)
+                  Original / MSRP (₹)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-xs text-[#8c7e75] font-bold">$</span>
+                  <span className="absolute left-3 top-2.5 text-xs text-[#8c7e75] font-bold">₹</span>
                   <input
                     type="number"
                     min={1}

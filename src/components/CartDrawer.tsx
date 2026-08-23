@@ -39,8 +39,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   if (!isOpen) return null;
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const deliveryFee = subtotal > 1000 || subtotal === 0 ? 0 : 75;
-  const tax = Math.round(subtotal * 0.08); // 8% sales tax
+  const deliveryFee = subtotal > 35000 || subtotal === 0 ? 0 : 1500;
+  const tax = Math.round(subtotal * 0.12); // 12% GST
 
   const discountAmount = appliedCoupon
     ? appliedCoupon.discountPercent
@@ -157,7 +157,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     </div>
 
                     <span className="text-xs font-bold text-[#291e14]">
-                      ${(((item.price ?? (item as any).unitPrice ?? 0)) * (item.quantity ?? 1)).toLocaleString()}
+                      ₹{(((item.price ?? (item as any).unitPrice ?? 0)) * (item.quantity ?? 1)).toLocaleString('en-IN')}
                     </span>
                   </div>
                 </div>
@@ -213,33 +213,33 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <div className="space-y-1.5 text-xs text-[#57483f] pt-2 border-t border-[#f0eae1]">
               <div className="flex justify-between">
                 <span>Subtotal ({items.reduce((s, i) => s + i.quantity, 0)} items):</span>
-                <span className="font-semibold text-[#291e14]">${subtotal.toLocaleString()}</span>
+                <span className="font-semibold text-[#291e14]">₹{subtotal.toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between">
                 <span>Workshop White-Glove Delivery:</span>
                 <span>
                   {deliveryFee === 0 ? (
-                    <span className="text-[#15803d] font-bold">FREE (Orders $1,000+)</span>
+                    <span className="text-[#15803d] font-bold">FREE (Orders ₹35,000+)</span>
                   ) : (
-                    `$${deliveryFee}`
+                    `₹${deliveryFee.toLocaleString('en-IN')}`
                   )}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span>Sales Tax (8%):</span>
-                <span>${tax.toLocaleString()}</span>
+                <span>GST (12%):</span>
+                <span>₹{tax.toLocaleString('en-IN')}</span>
               </div>
 
               {discountAmount > 0 && (
                 <div className="flex justify-between text-[#15803d] font-bold">
                   <span>Coupon Discount:</span>
-                  <span>-${discountAmount.toLocaleString()}</span>
+                  <span>-₹{discountAmount.toLocaleString('en-IN')}</span>
                 </div>
               )}
 
               <div className="flex justify-between text-sm font-bold text-[#291e14] pt-2 border-t border-[#e7dfd5]">
                 <span>Total Amount:</span>
-                <span className="text-base text-[#92400e]">${grandTotal.toLocaleString()}</span>
+                <span className="text-base text-[#92400e]">₹{grandTotal.toLocaleString('en-IN')}</span>
               </div>
             </div>
 

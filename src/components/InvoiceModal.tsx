@@ -53,14 +53,14 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({ order, onClose }) =>
               <div>
                 <h2 className="text-2xl font-serif font-bold text-[#291e14]">WoodCraft Carpentry</h2>
                 <p className="text-xs text-[#854d0e] font-semibold tracking-wider uppercase">Master Joinery & Architectural Woodworks</p>
-                <p className="text-[11px] text-[#786b62] mt-0.5">102 Timber Mill Road, Sawmill District, OR 97477 • GSTIN: 33WOODCRAFT9921</p>
+                <p className="text-[11px] text-[#786b62] mt-0.5">Plot 42, Timber Yard Industrial Estate, Whitefield, Bengaluru 560066 • GSTIN: 29AABCW1928K1Z5</p>
               </div>
             </div>
 
             <div className="text-right">
               <span className="text-xs font-bold text-[#78350f] uppercase tracking-widest block">TAX INVOICE</span>
               <p className="text-lg font-bold font-mono text-[#291e14] mt-0.5">#{order.orderNumber}</p>
-              <p className="text-xs text-[#8c7e75]">Date: {new Date(order.createdAt).toLocaleDateString()}</p>
+              <p className="text-xs text-[#8c7e75]">Date: {new Date(order.createdAt).toLocaleDateString('en-IN')}</p>
             </div>
           </div>
 
@@ -108,9 +108,9 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({ order, onClose }) =>
                       </p>
                     </td>
                     <td className="p-3 text-center font-bold">{it.quantity}</td>
-                    <td className="p-3 text-right font-mono">${(it.price ?? 0).toLocaleString()}</td>
+                    <td className="p-3 text-right font-mono">₹{(it.price ?? 0).toLocaleString('en-IN')}</td>
                     <td className="p-3 text-right font-bold font-mono">
-                      ${((it.price ?? 0) * (it.quantity ?? 1)).toLocaleString()}
+                      ₹{((it.price ?? 0) * (it.quantity ?? 1)).toLocaleString('en-IN')}
                     </td>
                   </tr>
                 ))}
@@ -123,27 +123,27 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({ order, onClose }) =>
             <div className="w-64 space-y-2 text-xs">
               <div className="flex justify-between text-[#57483f]">
                 <span>Subtotal:</span>
-                <span className="font-mono font-semibold">${(order.subtotal ?? 0).toLocaleString()}</span>
+                <span className="font-mono font-semibold">₹{(order.subtotal ?? 0).toLocaleString('en-IN')}</span>
               </div>
               {order.discountAmount > 0 && (
                 <div className="flex justify-between text-[#15803d] font-semibold">
                   <span>Promotional Discount:</span>
-                  <span className="font-mono">-${order.discountAmount}</span>
+                  <span className="font-mono">-₹{order.discountAmount.toLocaleString('en-IN')}</span>
                 </div>
               )}
               <div className="flex justify-between text-[#57483f]">
-                <span>White-Glove Shipping:</span>
+                <span>White-Glove Delivery:</span>
                 <span className="font-mono font-semibold">
-                  {order.deliveryCharges === 0 ? 'FREE' : `$${order.deliveryCharges}`}
+                  {order.deliveryCharges === 0 ? 'FREE' : `₹${order.deliveryCharges.toLocaleString('en-IN')}`}
                 </span>
               </div>
               <div className="flex justify-between text-[#57483f]">
-                <span>Sales Tax (8%):</span>
-                <span className="font-mono font-semibold">${order.taxAmount}</span>
+                <span>GST (12%):</span>
+                <span className="font-mono font-semibold">₹{order.taxAmount.toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between text-sm font-bold text-[#291e14] pt-2 border-t-2 border-[#78350f]">
                 <span>Grand Total Paid:</span>
-                <span className="text-base text-[#92400e] font-mono">${(order.grandTotal ?? 0).toLocaleString()}</span>
+                <span className="text-base text-[#92400e] font-mono">₹{(order.grandTotal ?? 0).toLocaleString('en-IN')}</span>
               </div>
             </div>
           </div>

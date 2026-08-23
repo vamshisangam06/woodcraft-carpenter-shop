@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Filter,
   SlidersHorizontal,
@@ -8,6 +9,7 @@ import {
   Grid,
   List,
   Sparkles,
+  TreePine,
 } from 'lucide-react';
 import { Product, ProductCategory } from '../types';
 import { ProductCard } from './ProductCard';
@@ -59,10 +61,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | 'All'>(initialCategory);
   const [selectedWood, setSelectedWood] = useState<string>('All Woods');
-  const [maxPrice, setMaxPrice] = useState<number>(3000);
+  const [maxPrice, setMaxPrice] = useState<number>(120000);
   const [onlyInStock, setOnlyInStock] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<'featured' | 'price-low' | 'price-high' | 'rating'>('featured');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const filteredProducts = useMemo(() => {
     return products
@@ -105,12 +106,18 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   return (
     <div id="product-catalog-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Header & Banner */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[#e7dfd5] gap-4">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[#e7dfd5] gap-4"
+      >
         <div>
-          <span className="text-xs font-bold uppercase tracking-widest text-[#92400e]">
-            Handcrafted Collection
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#291e14] mt-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#fef3c7] text-[#92400e] text-xs font-bold uppercase tracking-wider mb-2 border border-[#fde68a]">
+            <TreePine className="w-3.5 h-3.5 text-[#b45309]" />
+            <span>Handcrafted Collection</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#291e14]">
             Master Woodcraft Catalog
           </h2>
           <p className="text-sm text-[#6e5d52] mt-1 max-w-xl">
@@ -118,32 +125,38 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           </p>
         </div>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.02, y: -1 }}
+          whileTap={{ scale: 0.98 }}
           id="catalog-custom-builder-banner-btn"
           onClick={onOpenCustomBuilder}
-          className="self-start md:self-auto px-5 py-2.5 bg-[#fef3c7] hover:bg-[#fde68a] text-[#78350f] border border-[#fcd34d] font-semibold text-xs rounded-xl flex items-center gap-2 shadow-2xs transition-all"
+          className="self-start md:self-auto px-5 py-2.5 bg-gradient-to-r from-[#fef3c7] to-[#fde68a] hover:from-[#fde68a] hover:to-[#fcd34d] text-[#78350f] border border-[#fcd34d] font-semibold text-xs rounded-xl flex items-center gap-2 shadow-xs transition-all cursor-pointer"
         >
           <Sparkles className="w-4 h-4 text-[#b45309]" />
           <span>Need Custom Dimensions? Build Custom</span>
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
-      {/* Category Pills Slider */}
+      {/* Category Pills Slider with subtle animation */}
       <div className="py-6 overflow-x-auto no-scrollbar flex items-center gap-2 border-b border-[#f0eae1]">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            id={`category-tab-${cat.replace(/\s+/g, '-').toLowerCase()}`}
-            onClick={() => setSelectedCategory(cat)}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-              selectedCategory === cat
-                ? 'bg-[#78350f] text-white shadow-xs'
-                : 'bg-[#f7f3eb] text-[#57483f] hover:bg-[#ede5d8]'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
+        {CATEGORIES.map((cat) => {
+          const isActive = selectedCategory === cat;
+          return (
+            <motion.button
+              whileTap={{ scale: 0.96 }}
+              key={cat}
+              id={`category-tab-${cat.replace(/\s+/g, '-').toLowerCase()}`}
+              onClick={() => setSelectedCategory(cat)}
+              className={`relative px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                isActive
+                  ? 'bg-[#78350f] text-white shadow-md'
+                  : 'bg-[#f7f3eb] text-[#57483f] hover:bg-[#ede5d8] hover:text-[#291e14]'
+              }`}
+            >
+              {cat}
+            </motion.button>
+          );
+        })}
       </div>
 
       {/* Filter and Control Toolbar */}
@@ -157,18 +170,18 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               placeholder="Filter by name, teak, oak, finish..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white border border-[#dfd4c5] rounded-xl text-xs text-[#291e14] placeholder-[#a89b91] focus:outline-hidden focus:border-[#78350f]"
+              className="w-full pl-9 pr-4 py-2 bg-white border border-[#dfd4c5] rounded-xl text-xs text-[#291e14] placeholder-[#a89b91] focus:outline-hidden focus:border-[#78350f] shadow-2xs transition-colors"
             />
           </div>
           <span className="text-xs text-[#8c7e75] font-medium hidden sm:inline">
-            Showing <strong className="text-[#291e14]">{filteredProducts.length}</strong> items
+            Showing <strong className="text-[#291e14] font-bold">{filteredProducts.length}</strong> items
           </span>
         </div>
 
         {/* Right: Filters, Wood Species, Price & Sort */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Wood Type Selector */}
-          <div className="flex items-center gap-1.5 text-xs text-[#57483f] bg-white border border-[#dfd4c5] px-3 py-1.5 rounded-xl">
+          <div className="flex items-center gap-1.5 text-xs text-[#57483f] bg-white border border-[#dfd4c5] px-3 py-1.5 rounded-xl shadow-2xs">
             <span className="text-[#8c7e75] font-medium">Timber:</span>
             <select
               value={selectedWood}
@@ -184,18 +197,18 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           </div>
 
           {/* In Stock Checkbox */}
-          <label className="flex items-center gap-2 text-xs text-[#57483f] cursor-pointer bg-white border border-[#dfd4c5] px-3 py-2 rounded-xl">
+          <label className="flex items-center gap-2 text-xs text-[#57483f] cursor-pointer bg-white border border-[#dfd4c5] px-3 py-2 rounded-xl shadow-2xs hover:bg-[#fcfaf7] transition-colors">
             <input
               type="checkbox"
               checked={onlyInStock}
               onChange={(e) => setOnlyInStock(e.target.checked)}
-              className="rounded text-[#78350f] focus:ring-[#78350f]"
+              className="rounded text-[#78350f] focus:ring-[#78350f] accent-[#78350f]"
             />
             <span className="font-medium">In Stock Only</span>
           </label>
 
           {/* Sort Selector */}
-          <div className="flex items-center gap-1.5 text-xs text-[#57483f] bg-white border border-[#dfd4c5] px-3 py-1.5 rounded-xl">
+          <div className="flex items-center gap-1.5 text-xs text-[#57483f] bg-white border border-[#dfd4c5] px-3 py-1.5 rounded-xl shadow-2xs">
             <ArrowUpDown className="w-3.5 h-3.5 text-[#8c7e75]" />
             <select
               value={sortBy}
@@ -212,42 +225,50 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
       </div>
 
       {/* Price Range Slider */}
-      <div className="mb-6 p-4 bg-[#fdfbf7] rounded-xl border border-[#f0eae1] flex flex-wrap items-center justify-between gap-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="mb-6 p-4 bg-gradient-to-r from-[#fdfbf7] to-[#f7f2ea] rounded-2xl border border-[#f0eae1] flex flex-wrap items-center justify-between gap-4 shadow-2xs"
+      >
         <div className="flex items-center gap-3">
           <span className="text-xs font-semibold text-[#57483f]">Price Limit:</span>
           <input
             type="range"
-            min="200"
-            max="3000"
-            step="50"
+            min="10000"
+            max="120000"
+            step="2500"
             value={maxPrice}
             onChange={(e) => setMaxPrice(Number(e.target.value))}
             className="accent-[#78350f] w-36 sm:w-48 cursor-pointer"
           />
-          <span className="text-xs font-bold text-[#78350f] bg-white px-2.5 py-1 rounded-md border border-[#e7dfd5]">
-            Up to ${maxPrice.toLocaleString()}
+          <span className="text-xs font-bold text-[#78350f] bg-white px-2.5 py-1 rounded-lg border border-[#e7dfd5] shadow-2xs">
+            Up to ₹{maxPrice.toLocaleString('en-IN')}
           </span>
         </div>
 
-        {searchQuery || selectedWood !== 'All Woods' || selectedCategory !== 'All' || maxPrice < 3000 || onlyInStock ? (
+        {searchQuery || selectedWood !== 'All Woods' || selectedCategory !== 'All' || maxPrice < 120000 || onlyInStock ? (
           <button
             onClick={() => {
               setSearchQuery('');
               setSelectedWood('All Woods');
               setSelectedCategory('All');
-              setMaxPrice(3000);
+              setMaxPrice(120000);
               setOnlyInStock(false);
             }}
-            className="text-xs text-[#b45309] hover:underline font-semibold"
+            className="text-xs text-[#b45309] hover:underline font-semibold cursor-pointer"
           >
             Reset All Filters
           </button>
         ) : null}
-      </div>
+      </motion.div>
 
       {/* Products Grid */}
       {filteredProducts.length === 0 ? (
-        <div className="py-20 text-center bg-[#fdfbf7] rounded-3xl border border-[#e7dfd5] p-8">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="py-20 text-center bg-[#fdfbf7] rounded-3xl border border-[#e7dfd5] p-8 shadow-xs"
+        >
           <div className="w-16 h-16 rounded-full bg-[#fef3c7] text-[#92400e] flex items-center justify-center mx-auto mb-4">
             <Search className="w-8 h-8" />
           </div>
@@ -259,27 +280,31 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           </p>
           <button
             onClick={onOpenCustomBuilder}
-            className="mt-5 px-6 py-2.5 bg-[#78350f] text-white text-xs font-semibold rounded-xl hover:bg-[#5c280a]"
+            className="mt-5 px-6 py-2.5 bg-[#78350f] text-white text-xs font-semibold rounded-xl hover:bg-[#5c280a] cursor-pointer shadow-xs transition-colors"
           >
             Request Custom Furniture Build
           </button>
-        </div>
+        </motion.div>
       ) : (
-        <div
+        <motion.div
+          layout
           id="products-grid"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onSelect={onSelectProduct}
-              onAddToCart={onAddToCart}
-              onRequestCustomization={onRequestCustomization}
-            />
-          ))}
-        </div>
+          <AnimatePresence>
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onSelect={onSelectProduct}
+                onAddToCart={onAddToCart}
+                onRequestCustomization={onRequestCustomization}
+              />
+            ))}
+          </AnimatePresence>
+        </motion.div>
       )}
     </div>
   );
 };
+
