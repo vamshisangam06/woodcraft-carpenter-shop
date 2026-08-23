@@ -1,0 +1,237 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global hardened helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'tharurs990@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // Entity validation helpers
+    function isValidUser(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() <= 120 &&
+             data.email is string && data.email.size() <= 120 &&
+             data.role in ['customer', 'admin', 'carpenter'];
+    }
+
+    function isValidProduct(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() <= 200 &&
+             data.category is string && data.category.size() <= 60 &&
+             data.price is number && data.price >= 0 &&
+             data.sku is string && data.sku.size() <= 60;
+    }
+
+    function isValidOrder(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.orderNumber is string && data.orderNumber.size() <= 60 &&
+             data.customerId is string && data.customerId.size() <= 128 &&
+             data.customerName is string && data.customerName.size() <= 120 &&
+             data.customerEmail is string && data.customerEmail.size() <= 120 &&
+             data.items is list && data.items.size() <= 50 &&
+             data.grandTotal is number && data.grandTotal >= 0 &&
+             data.orderStatus in ['Order Placed', 'Confirmed', 'In Production', 'Quality Check', 'Ready', 'Shipped', 'Delivered'];
+    }
+
+    function isValidQuote(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.quoteNumber is string && data.quoteNumber.size() <= 60 &&
+             data.customerId is string && data.customerId.size() <= 128 &&
+             data.customerName is string && data.customerName.size() <= 120 &&
+             data.customerEmail is string && data.customerEmail.size() <= 120 &&
+             data.furnitureType is string && data.furnitureType.size() <= 80 &&
+             data.woodType is string && data.woodType.size() <= 80 &&
+             data.status in ['pending_review', 'quoted', 'accepted', 'rejected', 'in_production', 'completed'];
+    }
+
+    function isValidBooking(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.bookingNumber is string && data.bookingNumber.size() <= 60 &&
+             data.customerId is string && data.customerId.size() <= 128 &&
+             data.customerName is string && data.customerName.size() <= 120 &&
+             data.customerEmail is string && data.customerEmail.size() <= 120 &&
+             data.serviceName is string && data.serviceName.size() <= 120 &&
+             data.status in ['booked', 'assigned', 'in_progress', 'completed', 'cancelled'];
+    }
+
+    function isValidInventory(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() <= 150 &&
+             data.sku is string && data.sku.size() <= 60 &&
+             data.currentStock is number &&
+             data.unit is string && data.unit.size() <= 30 &&
+             data.status in ['in_stock', 'low_stock', 'out_of_stock'];
+    }
+
+    function isValidCarpenter(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() <= 120 &&
+             data.email is string && data.email.size() <= 120 &&
+             data.status in ['available', 'on_site', 'in_workshop', 'on_leave'];
+    }
+
+    function isValidNotification(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.userId is string && data.userId.size() <= 128 &&
+             data.type in ['order', 'quote', 'service', 'inventory', 'system'] &&
+             data.title is string && data.title.size() <= 150 &&
+             data.message is string && data.message.size() <= 1000 &&
+             data.read is bool;
+    }
+
+    // 1. Users collection
+    match /users/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if isAdmin();
+      allow create: if isValidId(userId) && isValidUser(incoming()) && (isOwner(userId) || isAdmin());
+      allow update: if isValidId(userId) && isValidUser(incoming()) && (isOwner(userId) || isAdmin());
+      allow delete: if isValidId(userId) && isAdmin();
+    }
+
+    // 2. Products collection (Public read catalog, admin write)
+    match /products/{productId} {
+      allow get, list: if true;
+      allow create: if isValidId(productId) && isValidProduct(incoming()) && isAdmin();
+      allow update: if isValidId(productId) && isValidProduct(incoming()) && isAdmin();
+      allow delete: if isValidId(productId) && isAdmin();
+    }
+
+    // 3. Orders collection
+    match /orders/{orderId} {
+      allow get: if isValidId(orderId) && (
+        isAdmin() ||
+        (isSignedIn() && (
+          resource.data.customerId == request.auth.uid ||
+          resource.data.assignedCarpenterId == request.auth.uid
+        ))
+      );
+      allow list: if isSignedIn() && (
+        isAdmin() ||
+        resource.data.customerId == request.auth.uid ||
+        resource.data.assignedCarpenterId == request.auth.uid
+      );
+      allow create: if isValidId(orderId) && isValidOrder(incoming()) && (
+        isAdmin() || (isSignedIn() && incoming().customerId == request.auth.uid)
+      );
+      allow update: if isValidId(orderId) && isValidOrder(incoming()) && (
+        isAdmin() ||
+        (isSignedIn() && existing().customerId == request.auth.uid && incoming().customerId == request.auth.uid) ||
+        (isSignedIn() && existing().assignedCarpenterId == request.auth.uid)
+      );
+      allow delete: if isValidId(orderId) && isAdmin();
+    }
+
+    // 4. Custom Quotes collection
+    match /quotes/{quoteId} {
+      allow get: if isValidId(quoteId) && (
+        isAdmin() ||
+        (isSignedIn() && resource.data.customerId == request.auth.uid)
+      );
+      allow list: if isSignedIn() && (
+        isAdmin() ||
+        resource.data.customerId == request.auth.uid
+      );
+      allow create: if isValidId(quoteId) && isValidQuote(incoming()) && (
+        isAdmin() || (isSignedIn() && incoming().customerId == request.auth.uid)
+      );
+      allow update: if isValidId(quoteId) && isValidQuote(incoming()) && (
+        isAdmin() ||
+        (isSignedIn() && existing().customerId == request.auth.uid)
+      );
+      allow delete: if isValidId(quoteId) && isAdmin();
+    }
+
+    // 5. Service Bookings collection
+    match /bookings/{bookingId} {
+      allow get: if isValidId(bookingId) && (
+        isAdmin() ||
+        (isSignedIn() && (
+          resource.data.customerId == request.auth.uid ||
+          resource.data.assignedWorkerId == request.auth.uid
+        ))
+      );
+      allow list: if isSignedIn() && (
+        isAdmin() ||
+        resource.data.customerId == request.auth.uid ||
+        resource.data.assignedWorkerId == request.auth.uid
+      );
+      allow create: if isValidId(bookingId) && isValidBooking(incoming()) && (
+        isAdmin() || (isSignedIn() && incoming().customerId == request.auth.uid)
+      );
+      allow update: if isValidId(bookingId) && isValidBooking(incoming()) && (
+        isAdmin() ||
+        (isSignedIn() && (
+          existing().customerId == request.auth.uid ||
+          existing().assignedWorkerId == request.auth.uid
+        ))
+      );
+      allow delete: if isValidId(bookingId) && isAdmin();
+    }
+
+    // 6. Inventory items collection
+    match /inventory/{itemId} {
+      allow get, list: if isSignedIn();
+      allow create, update, delete: if isValidId(itemId) && isValidInventory(incoming()) && isAdmin();
+    }
+
+    // 7. Carpenters collection
+    match /carpenters/{carpenterId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(carpenterId) && isValidCarpenter(incoming()) && (
+        isAdmin() || (isSignedIn() && request.auth.uid == carpenterId)
+      );
+      allow delete: if isValidId(carpenterId) && isAdmin();
+    }
+
+    // 8. Notifications collection
+    match /notifications/{notificationId} {
+      allow get: if isValidId(notificationId) && (
+        isAdmin() ||
+        (isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.userId == 'all'))
+      );
+      allow list: if isSignedIn() && (
+        isAdmin() ||
+        resource.data.userId == request.auth.uid ||
+        resource.data.userId == 'all'
+      );
+      allow create: if isValidId(notificationId) && isValidNotification(incoming()) && isSignedIn();
+      allow update: if isValidId(notificationId) && isValidNotification(incoming()) && (
+        isAdmin() ||
+        (isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.userId == 'all'))
+      );
+      allow delete: if isValidId(notificationId) && (
+        isAdmin() ||
+        (isSignedIn() && resource.data.userId == request.auth.uid)
+      );
+    }
+  }
+}

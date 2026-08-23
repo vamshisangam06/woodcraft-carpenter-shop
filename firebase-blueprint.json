@@ -1,0 +1,259 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered WoodCraft customer, artisan carpenter, or administrator profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "role": { "type": "string", "enum": ["customer", "admin", "carpenter"] },
+        "avatar": { "type": "string", "maxLength": 500 },
+        "address": { "type": "string", "maxLength": 300 },
+        "specialty": { "type": "string", "maxLength": 120 }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Handcrafted furniture piece in the catalog",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 60 },
+        "price": { "type": "number" },
+        "originalPrice": { "type": "number" },
+        "materials": { "type": "array" },
+        "woodType": { "type": "string", "maxLength": 100 },
+        "finishes": { "type": "array" },
+        "description": { "type": "string", "maxLength": 3000 },
+        "shortDescription": { "type": "string", "maxLength": 500 },
+        "inStock": { "type": "boolean" },
+        "stockCount": { "type": "number" },
+        "images": { "type": "array" },
+        "featured": { "type": "boolean" },
+        "popular": { "type": "boolean" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "number" },
+        "sku": { "type": "string", "maxLength": 60 },
+        "estimatedDeliveryDays": { "type": "number" },
+        "careInstructions": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["id", "name", "category", "price", "sku"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer purchase order and milestone production tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "orderNumber": { "type": "string", "maxLength": 60 },
+        "customerId": { "type": "string", "maxLength": 128 },
+        "customerName": { "type": "string", "maxLength": 120 },
+        "customerEmail": { "type": "string", "maxLength": 120 },
+        "customerPhone": { "type": "string", "maxLength": 30 },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "customizationCharges": { "type": "number" },
+        "deliveryCharges": { "type": "number" },
+        "taxAmount": { "type": "number" },
+        "discountAmount": { "type": "number" },
+        "couponApplied": { "type": "string", "maxLength": 40 },
+        "grandTotal": { "type": "number" },
+        "preferredDeliveryDate": { "type": "string", "maxLength": 40 },
+        "paymentMethod": { "type": "string", "enum": ["cod", "upi", "card", "netbanking"] },
+        "paymentStatus": { "type": "string", "enum": ["paid", "pending", "cod_confirmed"] },
+        "orderStatus": {
+          "type": "string",
+          "enum": [
+            "Order Placed",
+            "Confirmed",
+            "In Production",
+            "Quality Check",
+            "Ready",
+            "Shipped",
+            "Delivered"
+          ]
+        },
+        "timeline": { "type": "array" },
+        "assignedCarpenterId": { "type": "string", "maxLength": 128 },
+        "assignedCarpenterName": { "type": "string", "maxLength": 120 },
+        "trackingNumber": { "type": "string", "maxLength": 80 },
+        "carrierName": { "type": "string", "maxLength": 80 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "notes": { "type": "string", "maxLength": 1000 }
+      },
+      "required": [
+        "id",
+        "orderNumber",
+        "customerId",
+        "customerName",
+        "customerEmail",
+        "items",
+        "grandTotal",
+        "orderStatus"
+      ]
+    },
+    "CustomQuote": {
+      "title": "CustomQuote",
+      "description": "Custom furniture fabrication quotation request and itemized estimate",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "quoteNumber": { "type": "string", "maxLength": 60 },
+        "customerId": { "type": "string", "maxLength": 128 },
+        "customerName": { "type": "string", "maxLength": 120 },
+        "customerEmail": { "type": "string", "maxLength": 120 },
+        "customerPhone": { "type": "string", "maxLength": 30 },
+        "furnitureType": { "type": "string", "maxLength": 80 },
+        "woodType": { "type": "string", "maxLength": 80 },
+        "finishType": { "type": "string", "maxLength": 80 },
+        "designStyle": { "type": "string", "maxLength": 80 },
+        "referenceImageUrl": { "type": "string", "maxLength": 1000 },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "budgetRange": { "type": "string", "maxLength": 80 },
+        "preferredDeliveryDate": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending_review",
+            "quoted",
+            "accepted",
+            "rejected",
+            "in_production",
+            "completed"
+          ]
+        }
+      },
+      "required": ["id", "quoteNumber", "customerId", "customerName", "customerEmail", "furnitureType", "woodType", "status"]
+    },
+    "ServiceBooking": {
+      "title": "ServiceBooking",
+      "description": "On-site carpentry repair and installation service booking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "bookingNumber": { "type": "string", "maxLength": 60 },
+        "customerId": { "type": "string", "maxLength": 128 },
+        "customerName": { "type": "string", "maxLength": 120 },
+        "customerEmail": { "type": "string", "maxLength": 120 },
+        "customerPhone": { "type": "string", "maxLength": 30 },
+        "serviceId": { "type": "string", "maxLength": 80 },
+        "serviceName": { "type": "string", "maxLength": 120 },
+        "preferredDate": { "type": "string", "maxLength": 50 },
+        "preferredTimeSlot": { "type": "string", "maxLength": 50 },
+        "problemDescription": { "type": "string", "maxLength": 2000 },
+        "estimatedCost": { "type": "number" },
+        "finalCost": { "type": "number" },
+        "status": {
+          "type": "string",
+          "enum": ["booked", "assigned", "in_progress", "completed", "cancelled"]
+        },
+        "assignedWorkerId": { "type": "string", "maxLength": 128 },
+        "assignedWorkerName": { "type": "string", "maxLength": 120 },
+        "workerNotes": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "paymentStatus": { "type": "string", "enum": ["pending", "paid", "pay_on_service"] }
+      },
+      "required": ["id", "bookingNumber", "customerId", "customerName", "customerEmail", "serviceName", "status"]
+    },
+    "InventoryItem": {
+      "title": "InventoryItem",
+      "description": "Workshop raw timber, hardware, and adhesives stock item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 150 },
+        "sku": { "type": "string", "maxLength": 60 },
+        "category": { "type": "string", "maxLength": 80 },
+        "currentStock": { "type": "number" },
+        "unit": { "type": "string", "maxLength": 30 },
+        "minThreshold": { "type": "number" },
+        "unitCost": { "type": "number" },
+        "supplier": { "type": "string", "maxLength": 120 },
+        "location": { "type": "string", "maxLength": 120 },
+        "lastRestocked": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "enum": ["in_stock", "low_stock", "out_of_stock"] }
+      },
+      "required": ["id", "name", "sku", "currentStock", "unit", "status"]
+    },
+    "Carpenter": {
+      "title": "Carpenter",
+      "description": "WoodCraft master carpenter and workshop artisan profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "avatar": { "type": "string", "maxLength": 500 },
+        "specialties": { "type": "array" },
+        "experienceYears": { "type": "number" },
+        "rating": { "type": "number" },
+        "completedJobs": { "type": "number" },
+        "activeJobsCount": { "type": "number" },
+        "status": {
+          "type": "string",
+          "enum": ["available", "on_site", "in_workshop", "on_leave"]
+        },
+        "assignedOrders": { "type": "array" },
+        "assignedBookings": { "type": "array" }
+      },
+      "required": ["id", "name", "email", "status"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "In-app status notification for orders, quotes, and services",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string", "enum": ["order", "quote", "service", "inventory", "system"] },
+        "title": { "type": "string", "maxLength": 150 },
+        "message": { "type": "string", "maxLength": 1000 },
+        "timestamp": { "type": "string", "maxLength": 50 },
+        "read": { "type": "boolean" },
+        "linkAction": { "type": "string", "maxLength": 80 }
+      },
+      "required": ["id", "userId", "type", "title", "message", "read"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Catalog furniture pieces and stock"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Customer purchase orders and tracking timeline"
+    },
+    "/quotes/{quoteId}": {
+      "schema": "CustomQuote",
+      "description": "Custom furniture quotation requests and breakdowns"
+    },
+    "/bookings/{bookingId}": {
+      "schema": "ServiceBooking",
+      "description": "On-site carpentry repair and installation service bookings"
+    },
+    "/inventory/{itemId}": {
+      "schema": "InventoryItem",
+      "description": "Workshop raw timber, hardware, and finishes inventory"
+    },
+    "/carpenters/{carpenterId}": {
+      "schema": "Carpenter",
+      "description": "Master woodworkers and workshop artisans"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "User notifications"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "WoodCraft Carpentry",
+  "description": "Professional Carpenter Shop Management & E-Commerce Platform with Custom Furniture Quotations, Service Bookings, Inventory, and Order Tracking.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
